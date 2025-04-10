@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Popular 2025 - Reformas Laborales</title>
+    <style>
+        :root {
+            --amarillo: #FCD116;
+            --azul: #003893;
+            --rojo: #CE1126;
+            --blanco: #FFFFFF;
+            --gris-oscuro: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--gris-oscuro);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        
+        .contenedor-bandera {
+            position: relative;
+            height: 120px; /* Altura total de la bandera */
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .bandera-colombia {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .bandera-amarillo {
+            background-color: var(--amarillo);
+            height: 50%; /* 50% de 120px = 60px */
+            width: 100%;
+        }
+        
+        .bandera-azul {
+            background-color: var(--azul);
+            height: 25%; /* 25% de 120px = 30px */
+            width: 100%;
+        }
+        
+        .bandera-rojo {
+            background-color: var(--rojo);
+            height: 25%; /* 25% de 120px = 30px */
+            width: 100%;
+        }
+        
+        .texto-bandera {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Misma altura que la bandera */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        h1 {
+            color: var(--azul);
+            margin: 0;
+            font-size: 2.2rem;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .subtitulo {
+            color: var(--rojo);
+            font-weight: 600;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 0.3rem 1rem;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        .contenedor {
+            padding: 0 2rem;
+        }
+        
+        /* Resto del CSS se mantiene igual */
+        .pregunta {
+            background-color: var(--blanco);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--azul);
+            transition: transform 0.3s ease;
+        }
+        
+        .pregunta:hover {
+            transform: translateY(-3px);
+        }
+        
+        .pregunta h3 {
+            margin-top: 0;
+            color: var(--azul);
+            font-size: 1.1rem;
+        }
+        
+        .opciones {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .opcion {
+            display: flex;
+            align-items: center;
+        }
+        
+        .opcion input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--azul);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .opcion input[type="radio"]:checked {
+            background-color: var(--amarillo);
+            border-color: var(--rojo);
+        }
+        
+        .opcion input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--rojo);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+        }
+        
+        .opcion label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--amarillo), var(--rojo));
+            color: var(--blanco);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: block;
+            margin: 2.5rem auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, var(--rojo), var(--amarillo));
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        #resultado {
+            background: linear-gradient(135deg, var(--azul), var(--rojo));
+            color: var(--blanco);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        #resultado h2 {
+            margin-top: 0;
+            color: var(--amarillo);
+        }
+        
+        #resultado ul {
+            text-align: left;
+            max-width: 500px;
+            margin: 1.5rem auto;
+            padding: 0;
+            list-style-type: none;
+        }
+        
+        #resultado li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(252, 209, 22, 0.3);
+        }
+        
+        .error {
+            color: var(--rojo);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            background-color: var(--azul);
+            color: var(--blanco);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .opciones {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .contenedor {
+                padding: 0 1rem;
+            }
+            
+            .contenedor-bandera {
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-bandera">
+        <div class="bandera-colombia">
+            <div class="bandera-amarillo"></div>
+            <div class="bandera-azul"></div>
+            <div class="bandera-rojo"></div>
+        </div>
+        <div class="texto-bandera">
+            <h1>CONSULTA POPULAR 2025</h1>
+            <div class="subtitulo">Su opinión sobre las reformas laborales en Colombia</div>
+        </div>
+    </div>
+    
+    <div class="contenedor">
+        <form id="encuestaForm">
+            <!-- Preguntas de la encuesta (se mantienen igual) -->
+            <div class="pregunta">
+                <h3>1. ¿Aprueba usted una ley que modifique la jornada nocturna en Colombia, estableciendo que inicie a las 7:00 p.m. en lugar de las 10:00 p.m., y que se mantenga el pago adicional por las horas trabajadas en este horario?</h3>
+                <div class="opciones">
+                    <div class="opcion">
+                        <input type="radio" name="pregunta1" id="p1_si" value="SI">
+                        <label for="p1_si">SI</label>
+                    </div>
+                    <div class="opcion">
+                        <input type="radio" name="pregunta1" id="p1_no" value="NO">
+                        <label for="p1_no">NO</label>
+                    </div>
+                </div>
+                <div class="error" id="error1">Por favor seleccione una opción</div>
+            </div>
+            
+            <div class="pregunta">
+                <h3>2. ¿Está usted de acuerdo con que el recargo por trabajar los días domingos y festivos en Colombia se aumente del 75% actual al 100% del salario ordinario?</h3>
+                <div class="opciones">
+                    <div class="opcion">
+                        <input type="radio" name="pregunta2" id="p2_si" value="SI">
+                        <label for="p2_si">SI</label>
+                    </div>
+                    <div class="opcion">
+                        <input type="radio" name="pregunta2" id="p2_no" value="NO">
+                        <label for="p2_no">NO</label>
+                    </div>
+                </div>
+                <div class="error" id="error2">Por favor seleccione una opción</div>
+            </div>
+            
+            <div class="pregunta">
+                <h3>3. ¿Considera usted necesario que todo trabajador que lleve más de dos años laborando de manera continua para una misma empresa bajo la modalidad de contrato de prestación de servicios deba ser automáticamente vinculado mediante un contrato laboral formal de carácter indefinido, garantizando todos sus derechos laborales?</h3>
+                <div class="opciones">
+                    <div class="opcion">
+                        <input type="radio" name="pregunta3" id="p3_si" value="SI">
+                        <label for="p3_si">SI</label>
+                    </div>
+                    <div class="opcion">
+                        <input type="radio" name="pregunta3" id="p3_no" value="NO">
+                        <label for="p3_no">NO</label>
+                    </div>
+                </div>
+                <div class="error" id="error3">Por favor seleccione una opción</div>
+            </div>
+            
+            <div class="pregunta">
+                <h3>4. ¿Apoya usted una ley que garantice que los estudiantes del Servicio Nacional de Aprendizaje (SENA) reciban un auxilio económico equivalente al 100% del salario mínimo legal vigente durante su etapa productiva y al 50% durante su etapa de formación?</h3>
+                <div class="opciones">
+                    <div class="opcion">
+                        <input type="radio" name="pregunta4" id="p4_si" value="SI">
+                        <label for="p4_si">SI</label>
+                    </div>
+                    <div class="opcion">
+                        <input type="radio" name="pregunta4" id="p4_no" value="NO">
+                        <label for="p4_no">NO</label>
+                    </div>
+                </div>
+                <div class="error" id="error4">Por favor seleccione una opción</div>
+            </div>
+            
+            <div class="pregunta">
+                <h3>5. ¿Está usted de acuerdo con que la licencia de paternidad en Colombia se aumente progresivamente, a partir del año 2024, desde las dos semanas actuales hasta alcanzar doce semanas?</h3>
+                <div class="opciones">
+                    <div class="opcion">
+                        <input type="radio" name="pregunta5" id="p5_si" value="SI">
+                        <label for="p5_si">SI</label>
+                    </div>
+                    <div class="opcion">
+                        <input type="radio" name="pregunta5" id="p5_no" value="NO">
+                        <label for="p5_no">NO</label>
+                    </div>
+                </div>
+                <div class="error" id="error5">Por favor seleccione una opción</div>
+            </div>
+            
+            <button type="button" id="enviar">ENVIAR MI VOTO</button>
+        </form>
+        
+        <div id="resultado"></div>
+    </div>
+    
+    <footer>
+        Consulta Popular 2025 - Todos los derechos reservados ©
+    </footer>
+    
+    <script>
+        document.getElementById('enviar').addEventListener('click', function() {
+            // Validar que todas las preguntas tengan respuesta
+            let todasRespondidas = true;
+            
+            for (let i = 1; i <= 5; i++) {
+                const pregunta = document.querySelector(`input[name="pregunta${i}"]:checked`);
+                const errorElement = document.getElementById(`error${i}`);
+                
+                if (!pregunta) {
+                    errorElement.style.display = 'block';
+                    todasRespondidas = false;
+                } else {
+                    errorElement.style.display = 'none';
+                }
+            }
+            
+            if (!todasRespondidas) {
+                return;
+            }
+            
+            // Calcular resultados
+            let respuestas = [];
+            for (let i = 1; i <= 5; i++) {
+                respuestas.push(document.querySelector(`input[name="pregunta${i}"]:checked`).value);
+            }
+            
+            // Mostrar resultados
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.style.display = 'block';
+            resultadoDiv.innerHTML = `
+                <h2>¡SU VOTO HA SIDO REGISTRADO!</h2>
+                <p>Gracias por participar en la Consulta Popular 2025 sobre reformas laborales.</p>
+                <p>Sus respuestas:</p>
+                <ul>
+                    <li><strong>Jornada nocturna:</strong> ${respuestas[0]}</li>
+                    <li><strong>Recargo dominical/festivo:</strong> ${respuestas[1]}</li>
+                    <li><strong>Contratos de prestación de servicios:</strong> ${respuestas[2]}</li>
+                    <li><strong>Auxilio SENA:</strong> ${respuestas[3]}</li>
+                    <li><strong>Licencia de paternidad:</strong> ${respuestas[4]}</li>
+                </ul>
+                <p>Los resultados de esta consulta serán presentados al Congreso de la República.</p>
+            `;
+            
+            // Desplazarse al resultado
+            resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // Deshabilitar el botón después de enviar
+            document.getElementById('enviar').disabled = true;
+        });
+    </script>
+</body>
+</html>
