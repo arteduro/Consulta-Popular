@@ -25,7 +25,7 @@
         
         .contenedor-bandera {
             position: relative;
-            height: 120px; /* Altura total de la bandera */
+            height: 120px;
             margin-bottom: 2rem;
             overflow: hidden;
         }
@@ -38,19 +38,19 @@
         
         .bandera-amarillo {
             background-color: var(--amarillo);
-            height: 50%; /* 50% de 120px = 60px */
+            height: 50%;
             width: 100%;
         }
         
         .bandera-azul {
             background-color: var(--azul);
-            height: 25%; /* 25% de 120px = 30px */
+            height: 25%;
             width: 100%;
         }
         
         .bandera-rojo {
             background-color: var(--rojo);
-            height: 25%; /* 25% de 120px = 30px */
+            height: 25%;
             width: 100%;
         }
         
@@ -59,7 +59,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%; /* Misma altura que la bandera */
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -93,7 +93,6 @@
             padding: 0 2rem;
         }
         
-        /* Resto del CSS se mantiene igual */
         .pregunta {
             background-color: var(--blanco);
             border-radius: 10px;
@@ -102,16 +101,18 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-left: 5px solid var(--azul);
             transition: transform 0.3s ease;
-        }
-        
-        .pregunta:hover {
-            transform: translateY(-3px);
+            text-align: justify;
+            text-justify: inter-word;
+            hyphens: auto;
+            line-height: 1.7;
         }
         
         .pregunta h3 {
             margin-top: 0;
+            margin-bottom: 0.8rem;
             color: var(--azul);
             font-size: 1.1rem;
+            text-align: justify;
         }
         
         .opciones {
@@ -252,6 +253,15 @@
             .contenedor-bandera {
                 height: 100px;
             }
+            
+            .pregunta {
+                padding: 1.2rem;
+                line-height: 1.6;
+            }
+            
+            .pregunta h3 {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -270,7 +280,6 @@
     
     <div class="contenedor">
         <form id="encuestaForm">
-            <!-- Preguntas de la encuesta (se mantienen igual) -->
             <div class="pregunta">
                 <h3>1. ¿Aprueba usted una ley que modifique la jornada nocturna en Colombia, estableciendo que inicie a las 7:00 p.m. en lugar de las 10:00 p.m., y que se mantenga el pago adicional por las horas trabajadas en este horario?</h3>
                 <div class="opciones">
@@ -358,7 +367,6 @@
     
     <script>
         document.getElementById('enviar').addEventListener('click', function() {
-            // Validar que todas las preguntas tengan respuesta
             let todasRespondidas = true;
             
             for (let i = 1; i <= 5; i++) {
@@ -377,13 +385,11 @@
                 return;
             }
             
-            // Calcular resultados
             let respuestas = [];
             for (let i = 1; i <= 5; i++) {
                 respuestas.push(document.querySelector(`input[name="pregunta${i}"]:checked`).value);
             }
             
-            // Mostrar resultados
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display = 'block';
             resultadoDiv.innerHTML = `
@@ -400,10 +406,7 @@
                 <p>Los resultados de esta consulta serán presentados al Congreso de la República.</p>
             `;
             
-            // Desplazarse al resultado
             resultadoDiv.scrollIntoView({ behavior: 'smooth' });
-            
-            // Deshabilitar el botón después de enviar
             document.getElementById('enviar').disabled = true;
         });
     </script>
