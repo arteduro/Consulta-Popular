@@ -263,6 +263,27 @@
                 font-size: 1rem;
             }
         }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--amarillo);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -356,6 +377,10 @@
             </div>
             
             <button type="button" id="enviar">ENVIAR MI VOTO</button>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Enviando respuestas...</p>
+            </div>
         </form>
         
         <div id="resultado"></div>
@@ -364,9 +389,21 @@
     <footer>
         Consulta Popular 2025 - Todos los derechos reservados ©
     </footer>
-    
+   
     <script>
-        document.getElementById('enviar').addEventListener('click', function() {
+        // URL del formulario de Google (debes reemplazarla con la tuya)
+        const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeBcPXbN76t_YMcvd5CJn95uVSQkyJsNJUtdvd1GQNWxfu7cg/formResponse";
+        // Nombres de los campos en el formulario de Google (debes reemplazarlos)
+        const FIELD_IDS = {
+            pregunta1: "entry.1105192107", // Reemplaza con el ID real del campo 1
+            pregunta2: "entry.1375380220", // Reemplaza con el ID real del campo 2
+            pregunta3: "entry.1167978425", // Reemplaza con el ID real del campo 3
+            pregunta4: "entry.889428155", // Reemplaza con el ID real del campo 4
+            pregunta5: "entry.1964916120"  // Reemplaza con el ID real del campo 5
+        };
+        
+        document.getElementById('enviar').addEventListener('click', async function() {
+            // Validar que todas las preguntas tengan respuesta
             let todasRespondidas = true;
             
             for (let i = 1; i <= 5; i++) {
@@ -385,11 +422,56 @@
                 return;
             }
             
-            let respuestas = [];
-            for (let i = 1; i <= 5; i++) {
-                respuestas.push(document.querySelector(`input[name="pregunta${i}"]:checked`).value);
+            // Mostrar spinner de carga
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('enviar').disabled = true;
+            
+            try {
+                // Recoger respuestas
+                let respuestas = {};
+                for (let i = 1; i <= 5; i++) {
+                    respuestas[`pregunta${i}`] = document.querySelector(`input[name="pregunta${i}"]:checked`).value;
+                }
+                
+                // Enviar respuestas a Google Forms
+                await enviarAGoogleForms(respuestas);
+                
+                // Mostrar resultados al usuario
+                mostrarResultados(respuestas);
+                
+            } catch (error) {
+                console.error("Error al enviar respuestas:", error);
+                alert("Ocurrió un error al enviar sus respuestas. Por favor intente nuevamente.");
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+        
+        async function enviarAGoogleForms(respuestas) {
+            // Crear FormData con las respuestas
+            const formData = new FormData();
+            
+            // Agregar cada respuesta al FormData
+            for (const [pregunta, respuesta] of Object.entries(respuestas)) {
+                const fieldId = FIELD_IDS[pregunta];
+                if (fieldId) {
+                    formData.append(fieldId, respuesta);
+                }
             }
             
+            // Enviar datos al formulario de Google
+            const response = await fetch(GOOGLE_FORM_ACTION, {
+                method: "POST",
+                body: formData,
+                mode: "no-cors" // Importante para evitar problemas CORS
+            });
+            
+            // Nota: no podemos verificar la respuesta debido a 'no-cors'
+            // Pero asumimos que se envió correctamente
+            return response;
+        }
+        
+        function mostrarResultados(respuestas) {
             const resultadoDiv = document.getElementById('resultado');
             resultadoDiv.style.display = 'block';
             resultadoDiv.innerHTML = `
@@ -397,18 +479,17 @@
                 <p>Gracias por participar en la Consulta Popular 2025 sobre reformas laborales.</p>
                 <p>Sus respuestas:</p>
                 <ul>
-                    <li><strong>Jornada nocturna:</strong> ${respuestas[0]}</li>
-                    <li><strong>Recargo dominical/festivo:</strong> ${respuestas[1]}</li>
-                    <li><strong>Contratos de prestación de servicios:</strong> ${respuestas[2]}</li>
-                    <li><strong>Auxilio SENA:</strong> ${respuestas[3]}</li>
-                    <li><strong>Licencia de paternidad:</strong> ${respuestas[4]}</li>
+                    <li><strong>Jornada nocturna:</strong> ${respuestas.pregunta1}</li>
+                    <li><strong>Recargo dominical/festivo:</strong> ${respuestas.pregunta2}</li>
+                    <li><strong>Contratos de prestación de servicios:</strong> ${respuestas.pregunta3}</li>
+                    <li><strong>Auxilio SENA:</strong> ${respuestas.pregunta4}</li>
+                    <li><strong>Licencia de paternidad:</strong> ${respuestas.pregunta5}</li>
                 </ul>
                 <p>Los resultados de esta consulta serán presentados al Congreso de la República.</p>
             `;
             
             resultadoDiv.scrollIntoView({ behavior: 'smooth' });
-            document.getElementById('enviar').disabled = true;
-        });
+        }
     </script>
 </body>
 </html>
